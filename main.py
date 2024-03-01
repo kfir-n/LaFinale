@@ -2,12 +2,19 @@
 
 # Press Shift+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+
+# STAGE 1
 import numpy as np
 import pandas as pd
+# STAGE 2
 import random
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import LabelEncoder
 from datetime import datetime
+# STAGE 3
+from sklearn.preprocessing import LabelEncoder
+# STAGE 4
+from sklearn.model_selection import train_test_split
+# STAGE 5
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
 
 # Read the table into a pandas DataFrame
 # df is a global variable
@@ -71,6 +78,36 @@ def main():
     print(y_train.head())
     print("\nFirst few rows of y_test:")
     print(y_test.head())
+    scale_and_print_features(X_train, X_test)
+
+
+def scale_and_print_features(X_train, X_test):
+    """
+    Scale the numerical features in the training and test sets and print the first few rows.
+
+    Parameters:
+    - X_train: DataFrame - The training feature set.
+    - X_test: DataFrame - The test feature set.
+    """
+    # Initialize the scaler
+    scaler = StandardScaler()
+
+    # Select only numerical columns for scaling
+    numerical_columns = X_train.select_dtypes(include=[np.number]).columns
+
+    # Fit on training data (numerical columns only) and transform both training and test data
+    X_train_scaled = X_train.copy()
+    X_test_scaled = X_test.copy()
+
+    X_train_scaled[numerical_columns] = scaler.fit_transform(X_train[numerical_columns])
+    X_test_scaled[numerical_columns] = scaler.transform(X_test[numerical_columns])
+
+    # Print the first few rows of the scaled DataFrames
+    print("Scaled X_train DataFrame (numerical features only):")
+    print(X_train_scaled.head())
+
+    print("\nScaled X_test DataFrame (numerical features only):")
+    print(X_test_scaled.head())
 
 
 def preprocess_and_split_data(file_path, target_column, categorical_columns=None, test_size=0.2, random_state=42):
