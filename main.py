@@ -15,6 +15,9 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 # STAGE 5
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
+from sklearn.metrics import accuracy_score ,confusion_matrix
+from sklearn.naive_bayes import GaussianNB
+from sklearn.tree import DecisionTreeClassifier
 
 # Read the table into a pandas DataFrame
 # df is a global variable
@@ -231,6 +234,24 @@ def encode_categorical_columns(df, columns):
     return df_encoded
 
 
+def Classification(X_train, X_test, y_train, y_test):
+    clf = DecisionTreeClassifier()
+    clf = clf.fit(X_train, y_train)
+    y_pred = clf.predict(X_test)
+    print("Accuracy:", accuracy_score(y_test, y_pred))
+    return accuracy_score
+
+
+def Naive_Bayes(X_train, X_test, y_train, y_test):
+    sc = StandardScaler()
+    X_train = sc.fit_transform(X_train)
+    X_test = sc.transform(X_test)
+    classifier = GaussianNB()
+    classifier.fit(X_train, y_train)
+    y_pred = classifier.predict(X_test)
+    cm = confusion_matrix(y_test, y_pred)
+    print(f'this is the output of Naive Bayes:\n{cm}')
+    return cm
 # Example usage
 
 
